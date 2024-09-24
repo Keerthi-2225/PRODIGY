@@ -1,0 +1,46 @@
+from PIL import Image
+
+def load_image(file_path):
+    """Load an image from the specified file path."""
+    return Image.open(file_path)
+
+def encrypt_image(image):
+    """Encrypt the image using pixel manipulation (XOR operation)."""
+    pixels = list(image.getdata())
+    encrypted_pixels = [(p[0] ^ 123, p[1] ^ 123, p[2] ^ 123) for p in pixels]  # XOR with 123
+    encrypted_image = Image.new(image.mode, image.size)
+    encrypted_image.putdata(encrypted_pixels)
+    return encrypted_image
+
+def decrypt_image(image):
+    """Decrypt the image using the same XOR operation."""
+    return encrypt_image(image)  # Same function for decryption
+
+def save_image(image, file_path):
+    """Save the processed image to the specified file path."""
+    image.save(file_path)
+
+def main():
+    """Main function to run the image encryption tool."""
+    choice = input("Enter 'e' to encrypt or 'd' to decrypt an image: ").strip().lower()
+    file_path = input("Enter the image file path: ").strip()
+
+    try:
+        image = load_image(file_path)
+        
+        if choice == 'e':
+            encrypted_image = encrypt_image(image)
+            save_image(encrypted_image, 'encrypted_image.png')
+            print("Image encrypted successfully. Saved as 'encrypted_image.png'.")
+        elif choice == 'd':
+            decrypted_image = decrypt_image(image)
+            save_image(decrypted_image, 'decrypted_image.png')
+            print("Image decrypted successfully. Saved as 'decrypted_image.png'.")
+        else:
+            print("Invalid choice. Please enter 'e' or 'd'.")
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if _name_ == "_main_":
+    main()
